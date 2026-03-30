@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Tours | Luxury Car Routes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=DM+Sans:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #05070A;
+            --bg-surface: #0A0D14;
+            --surface-glass: rgba(10, 13, 20, 0.6);
+            --brand: #D4AF37;
+            --brand-hover: #F3C546;
+            --accent: #9F1239;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-focus: rgba(212, 175, 55, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography System */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .font-accent {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .text-overline {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--brand);
+        }
+
+        /* Layout */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Glassmorphism Components */
+        .glass-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            background: rgba(5, 7, 10, 0.7);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--brand);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--brand-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            padding: 1rem 2rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: black;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .logo span {
+            color: var(--brand);
+            font-weight: 600;
+        }
+
+        nav {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            nav {
+                display: flex;
+                gap: 2.5rem;
+            }
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        nav a:hover {
+            color: var(--brand);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(135deg, #05070A 0%, #0A0D14 50%, #05070A 100%);
+            overflow: hidden;
+            margin-top: -80px;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(159, 18, 57, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+        }
+
+        .hero-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 3rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            padding: 3rem 0;
+            position: sticky;
+            top: 80px;
+            z-index: 40;
+            background: linear-gradient(to bottom, var(--bg-base), transparent);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 13, 20, 0.8);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1rem;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--brand);
+            color: black;
+            border-color: var(--brand);
+        }
+
+        /* Bento Grid */
+        .showcase-section {
+            padding: 4rem 0 8rem;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Grid Item Sizes */
+        .col-span-12 { grid-column: span 12; }
+        .col-span-6 { grid-column: span 12; }
+        .col-span-4 { grid-column: span 12; }
+        .col-span-3 { grid-column: span 6; }
+
+        @media (min-width: 768px) {
+            .col-span-6 { grid-column: span 6; }
+            .col-span-4 { grid-column: span 6; }
+            .col-span-3 { grid-column: span 3; }
+        }
+
+        @media (min-width: 1024px) {
+            .col-span-4 { grid-column: span 4; }
+        }
+
+        /* Car Cards */
+        .car-card {
+            position: relative;
+            height: 100%;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        .car-card.featured {
+            min-height: 500px;
+        }
+
+        .car-visual {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+        }
+
+        .car-emoji {
+            font-size: 6rem;
+            filter: grayscale(100%) brightness(1.2) drop-shadow(0 0 30px rgba(212, 175, 55, 0.3));
+            transition: all 0.5s ease;
+        }
+
+        .car-card:hover .car-emoji {
+            transform: scale(1.1) translateY(-10px);
+            filter: grayscale(0%) brightness(1) drop-shadow(0 0 40px rgba(212, 175, 55, 0.5));
+        }
+
+        .route-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .car-content {
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(5, 7, 10, 0.9), transparent);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .car-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+        }
+
+        .car-route {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            color: var(--brand);
+            font-style: italic;
+        }
+
+        .car-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+        }
+
+        .car-price span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: block;
+            font-weight: 400;
+        }
+
+        .car-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .car-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(5, 7, 10, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 1.5rem;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            animation: modalIn 0.4s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-subtle);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: var(--brand);
+            color: black;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .modal-visual {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, var(--bg-base) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+        }
+
+        .modal-emoji {
+            font-size: 10rem;
+            filter: drop-shadow(0 0 60px rgba(212, 175, 55, 0.4));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .modal-info {
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .modal-route {
+            color: var(--brand);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.125rem;
+        }
+
+        .modal-details {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Scroll Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Noise Texture Overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+
+    <header class="glass-header">
+        <div class="container">
+            <div class="header-inner">
+                <div class="logo">Apex<span>.</span></div>
+                <nav>
+                    <a href="#showcase">Collection</a>
+                    <a href="#routes">Routes</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                <button class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.75rem;">Book Now</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <p class="text-overline" style="margin-bottom: 2rem;">Exclusive Automotive Journeys</p>
+            <h1>Drive the<br>Extraordinary</h1>
+            <p class="hero-subtitle">Twenty curated machines. Twenty legendary routes.<br>One unforgettable experience.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button class="btn-primary" onclick="document.getElementById('showcase').scrollIntoView({behavior: 'smooth'})">Explore Fleet</button>
+                <button class="btn-secondary">View Routes</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">All Routes</button>
+                <button class="filter-btn" data-filter="Alpine">Alpine</button>
+                <button class="filter-btn" data-filter="Coastal">Coastal</button>
+                <button class="filter-btn" data-filter="Desert">Desert</button>
+                <button class="filter-btn" data-filter="Urban">Urban</button>
+                <button class="filter-btn" data-filter="Forest">Forest</button>
+                <button class="filter-btn" data-filter="Arctic">Arctic</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="showcase" class="showcase-section">
+        <div class="container">
+            <div class="bento-grid" id="carGrid">
+                <!-- Cars inserted via JS -->
+            </div>
+        </div>
+    </section>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-body" id="modalContent">
+                <!-- Modal content inserted via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cars = [
+            { id: 1, name: "Phantom Ghost", route: "Alpine", routeName: "Alpine Ascent", emoji: "🏎️", price: "\$2,900", duration: "4 Hours", distance: "240 km", type: "GT Coupe", description: "Ascend through mist-covered peaks in this handcrafted masterpiece. The Alpine Ascent offers hairpin turns and panoramic vistas.", features: ["Carbon Ceramic Brakes", "Active Suspension", "Heated Carbon Seats"], span: "col-span-6" },
+            { id: 2, name: "Obsidian Cruiser", route: "Coastal", routeName: "Pacific Highway", emoji: "🚗", price: "\$1,800", duration: "6 Hours", distance: "320 km", type: "Luxury Sedan", description: "Cruise the endless coastline with the Pacific as your companion. Pure elegance meets ocean breeze.", features: ["Massage Seats", "Panoramic Roof", "Bespoke Audio"], span: "col-span-6" },
+            { id: 3, name: "Velvet Thunder", route: "Desert", routeName: "Desert Mirage", emoji: "🚙", price: "\$3,200", duration: "8 Hours", distance: "450 km", type: "Super SUV", description: "Conquer the dunes in absolute luxury. Where raw power meets the silence of the desert.", features: ["Off-road Mode", "Climate Control", "Desert Suspension"], span: "col-span-4" },
+            { id: 4, name: "Sapphire GT", route: "Alpine", routeName: "Mountain Mist", emoji: "🏎️", price: "\$3,500", duration: "5 Hours", distance: "280 km", type: "Sports Coupe", description: "A legendary route through the clouds. Experience precision engineering at altitude.", features: ["Turbo Charged", "Adaptive Dampers", "Racing Harness"], span: "col-span-4" },
+            { id: 5, name: "Crimson Bullet", route: "Desert", routeName: "Canyon Run", emoji: "🏍️", price: "\$2,400", duration: "3 Hours", distance: "180 km", type: "Hypercar", description: "Red rock canyons and endless straights. Pure adrenaline in a scarlet masterpiece.", features: ["Launch Control", "Carbon Fiber", "Track Mode"], span: "col-span-4" },
+            { id: 6, name: "Emerald Sovereign", route: "Forest", routeName: "Canopy Trail", emoji: "🚙", price: "\$2,100", duration: "5 Hours", distance: "200 km", type: "Luxury SUV", description: "Ancient forests and winding trails. Luxury meets wilderness in perfect harmony.", features: ["All-Terrain Tires", "Air Purifier", "Ambilight"], span: "col-span-3" },
+            { id: 7, name: "Silver Mirage", route: "Arctic", routeName: "Glacier Pass", emoji: "🚗", price: "\$4,200", duration: "7 Hours", distance: "380 km", type: "Executive Sedan", description: "Drive across frozen landscapes under the aurora. An otherworldly experience.", features: ["Heated Everything", "Winter Tires", "Insulated Cabin"], span: "col-span-3" },
+            { id: 8, name: "Golden Empress", route: "Coastal", routeName: "Vineyard Valley", emoji: "🚗", price: "\$2,600", duration: "6 Hours", distance: "300 km", type: "Convertible", description: "Rolling hills and wine country. Open-top luxury through golden landscapes.", features: ["Soft-top", "Wine Cooler", "Premium Leather"], span: "col-span-3" },
+            { id: 9, name: "Midnight Predator", route: "Urban", routeName: "Neon District", emoji: "🏎️", price: "\$1,500", duration: "2 Hours", distance: "80 km", type: "Supercar", description: "The city after dark belongs to you. Reflective skies and glowing streets.", features: ["Night Vision", "Sport Exhaust", "Carbon Brakes"], span: "col-span-3" },
+            { id: 10, name: "Arctic Wolf", route: "Arctic", routeName: "Snow Peak", emoji: "🚙", price: "\$3,800", duration: "5 Hours", distance: "220 km", type: "Performance SUV", description: "Whiteout conditions meet unstoppable force. Conquer the winter wilderness.", features: ["Snow Tracks", "Arctic Package", "Survival Kit"], span: "col-span-6" },
+            { id: 11, name: "Bronze Titan", route: "Desert", routeName: "Canyonlands", emoji: "🛻", price: "\$2,800", duration: "9 Hours", distance: "520 km", type: "Luxury Truck", description: "Rugged luxury for the untamed west. Ancient geology meets modern opulence.", features: ["Bed Storage", "Off-road AI", "Solar Charging"], span: "col-span-6" },
+            { id: 12, name: "Ruby Rose", route: "Coastal", routeName: "Sunset Boulevard", emoji: "🏎️", price: "\$2,200", duration: "3 Hours", distance: "120 km", type: "Roadster", description: "Golden hour never looked so good. Coastal curves and endless horizons.", features: ["Sunset Mode", "Beach Package", "Wind Deflector"], span: "col-span-4" },
+            { id: 13, name: "Onyx Vanguard", route: "Urban", routeName: "Night Drive", emoji: "🚗", price: "\$1,900", duration: "4 Hours", distance: "150 km", type: "Executive", description: "Urban sophistication after sunset. The city as your personal gallery.", features: ["Privacy Glass", "Chauffeur Mode", "Office Setup"], span: "col-span-4" },
+            { id: 14, name: "Ivory Chariot", route: "Coastal", routeName: "Clside Highway", emoji: "🚙", price: "\$2,500", duration: "5 Hours", distance: "260 km", type: "Grand Tourer", description: "Dramatic cliffs and crashing waves. White perfection against blue infinity.", features: ["Touring Mode", "Picnic Set", "Telescope"], span: "col-span-4" },
+            { id: 15, name: "Shadow Hunter", route: "Forest", routeName: "Moonlight Bay", emoji: "🚗", price: "\$2,000", duration: "4 Hours", distance: "190 km", type: "Sport Sedan", description: "Mysterious woods and hidden coves. Drive into the shadows with confidence.", features: ["Adaptive Lights", "Stealth Mode", "Night Assist"], span: "col-span-3" },
+            { id: 16, name: "Cobalt Storm", route: "Alpine", routeName: "Thunder Ridge", emoji: "🏎️", price: "\$3,600", duration: "6 Hours", distance: "340 km", type: "Race Coupe", description: "Storm through the mountains in electric blue fury. Raw power, refined control.", features: ["Storm Mode", "Rain Sensors", "Sport+ Tuning"], span: "col-span-3" },
+            { id: 17, name: "Amber Crown", route: "Coastal", routeName: "Golden Gate", emoji: "🚗", price: "\$2,300", duration: "3 Hours", distance: "140 km", type: "Classic Convertible", description: "Iconic bridges and bay views. Timeless elegance in amber hues.", features: ["Heritage Design", "Manual Mode", "Brass Accents"], span: "col-span-3" },
+            { id: 18, name: "Jet Phantom", route: "Urban", routeName: "Neon Route", emoji: "🏎️", price: "\$2,700", duration: "2.5 Hours", distance: "100 km", type: "Hyper GT", description: "Cyberpunk aesthetics meet brutal performance. The future is now.", features: ["Holographic HUD", "Electric Boost", "AI Co-pilot"], span: "col-span-3" },
+            { id: 19, name: "Royal Maroon", route: "Forest", routeName: "Castle Tour", emoji: "🚙", price: "\$3,000", duration: "7 Hours", distance: "400 km", type: "Luxury Estate", description: "Medieval castles and modern luxury. A journey through time and terrain.", features: ["Royal Interior", "Champagne Cooler", "Self-leveling"], span: "col-span-6" },
+            { id: 20, name: "Titanium Ghost", route: "Coastal", routeName: "Space Coast", emoji: "🏎️", price: "\$3,400", duration: "5 Hours", distance: "310 km", type: "Aero Coupe", description: "Where rockets launch and dreams take flight. Aerodynamic perfection.", features: ["Aero Mode", "Launch Control", "Satellite Audio"], span: "col-span-6" }
+        ];
+
+        const routeIcons = {
+            "Alpine": "⛰️",
+            "Coastal": "🌊",
+            "Desert": "🌵",
+            "Urban": "🏙️",
+            "Forest": "🌲",
+            "Arctic": "❄️"
+        };
+
+        function renderCars(filter = 'all') {
+            const grid = document.getElementById('carGrid');
+            grid.innerHTML = '';
+            
+            const filtered = filter === 'all' ? cars : cars.filter(c => c.route === filter);
+            
+            filtered.forEach((car, index) => {
+                const card = document.createElement('div');
+                card.className = `${car.span} fade-up`;
+                card.style.animationDelay = `${index * 50}ms`;
+                card.innerHTML = `
+                    <div class="glass-card car-card ${car.span === 'col-span-6' ? 'featured' : ''}" onclick="openModal(${car.id})">
+                        <div class="car-visual">
+                            <span class="route-icon">${routeIcons[car.route]}</span>
+                            <span class="car-emoji">${car.emoji}</span>
+                        </div>
+                        <div class="car-content">
+                            <div class="car-header">
+                                <div>
+                                    <h3 class="car-title">${car.name}</h3>
+                                    <p class="car-route">${car.routeName}</p>
+                                </div>
+                                <div class="car-price">
+                                    ${car.price}
+                                    <span>per journey</span>
+                                </div>
+                            </div>
+                            <div class="car-meta">
+                                <div class="car-meta-item">
+                                    <span>⏱️</span>
+                                    <span>${car.duration}</span>
+                                </div>
+                                <div class="car-meta-item">
+                                    <span>📍</span>
+                                    <span>${car.distance}</span>
+                                </div>
+                                <div class="car-meta-item">
+                                    <span>⚡</span>
+                                    <span>${car.type}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+            }, 100);
+        }
+
+        function openModal(id) {
+            const car = cars.find(c => c.id === id);
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('modalContent');
+            
+            content.innerHTML = `
+                <div class="modal-visual">
+                    <span class="modal-emoji">${car.emoji}</span>
+                </div>
+                <div class="modal-info">
+                    <div class="modal-route">${car.routeName}</div>
+                    <h2 class="modal-title">${car.name}</h2>
+                    <p class="modal-description">${car.description}</p>
+                    
+                    <div class="modal-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">${car.duration}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Distance</span>
+                            <span class="detail-value">${car.distance}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Vehicle Type</span>
+                            <span class="detail-value">${car.type}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Investment</span>
+                            <span class="detail-value" style="color: var(--brand); font-size: 1.25rem;">${car.price}</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; color: var(--text-secondary);">Included Features</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            ${car.features.map(f => `<span style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.875rem;">${f}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" style="width: 100%;" onclick="alert('Booking system initialized for ${car.name}')">Reserve This Journey</button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderCars(this.dataset.filter);
+            });
+        });
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Initialize
+        renderCars();
+
+        // Observe elements
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.glass-header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(5, 7, 10, 0.9)';
+            } else {
+                header.style.background = 'rgba(5, 7, 10, 0.7)';
+            }
+        });
+    </script>
+</body>
+</html>
